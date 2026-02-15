@@ -1,59 +1,237 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Job Portal Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-stack job portal application built with Laravel (backend) and React (frontend).
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### User Roles
+- **Employer**: Post, edit, and manage job listings
+- **Job Seeker**: Browse jobs, apply with resume, track applications
+- **Admin**: Approve/reject jobs, manage users and categories
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Core Functionality
+- Authentication with Laravel Sanctum
+- Role-based access control
+- Job posting and management
+- Resume upload (PDF only)
+- Application tracking
+- Category management
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+### Backend
+- Laravel 11
+- MySQL
+- Laravel Sanctum for API authentication
+- RESTful API architecture
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Frontend
+- React 18
+- Vite
+- React Router
+- Axios
+- Tailwind CSS
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Installation
 
-## Laravel Sponsors
+### Prerequisites
+- PHP 8.2 or higher
+- Composer
+- Node.js 18+ and npm
+- MySQL
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Backend Setup
 
-### Premium Partners
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. Install PHP dependencies:
+```bash
+composer install
+```
 
-## Contributing
+3. Copy environment file:
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. Configure your database in `.env`:
+```
+DB_DATABASE=job_portal
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-## Code of Conduct
+5. Generate application key:
+```bash
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. Run migrations and seeders:
+```bash
+php artisan migrate --seed
+```
 
-## Security Vulnerabilities
+7. Create storage symlink:
+```bash
+php artisan storage:link
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+8. Start the Laravel development server:
+```bash
+php artisan serve
+```
+
+The API will be available at `http://localhost:8000`
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+## Default Users
+
+After running the seeder, you can login with these credentials:
+
+- **Admin**
+  - Email: admin@jobportal.com
+  - Password: password
+
+- **Employer**
+  - Email: employer@jobportal.com
+  - Password: password
+
+- **Job Seeker**
+  - Email: seeker@jobportal.com
+  - Password: password
+
+## API Endpoints
+
+### Authentication
+- `POST /api/register` - Register new user
+- `POST /api/login` - Login
+- `POST /api/logout` - Logout (protected)
+- `GET /api/user` - Get authenticated user (protected)
+
+### Jobs
+- `GET /api/jobs/approved` - Get all approved jobs (public)
+- `GET /api/jobs` - Get jobs based on user role (protected)
+- `POST /api/jobs` - Create job (employer only)
+- `GET /api/jobs/{id}` - Get single job details (protected)
+- `PUT /api/jobs/{id}` - Update job (employer only)
+- `DELETE /api/jobs/{id}` - Delete job (employer/admin)
+
+### Applications
+- `GET /api/applications` - Get user's applications (seeker)
+- `POST /api/jobs/{id}/apply` - Apply to job (seeker)
+- `PATCH /api/applications/{id}/status` - Update application status (employer)
+
+### Categories
+- `GET /api/categories` - Get all categories
+- `POST /api/categories` - Create category (admin only)
+- `DELETE /api/categories/{id}` - Delete category (admin only)
+
+### Admin
+- `GET /api/admin/jobs` - Get all jobs
+- `PATCH /api/admin/jobs/{id}/approve` - Approve job
+- `PATCH /api/admin/jobs/{id}/reject` - Reject job
+- `GET /api/admin/users` - Get all users
+- `DELETE /api/admin/users/{id}` - Delete user
+
+## Database Schema
+
+### users
+- id, name, email, password, role (employer/seeker/admin)
+
+### jobs
+- id, title, description, salary, category_id, user_id, is_approved
+
+### applications
+- id, job_id, user_id, resume_path, status (pending/accepted/rejected)
+
+### categories
+- id, name
+
+## Project Structure
+
+### Backend
+```
+backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/Api/
+│   │   ├── Requests/
+│   │   └── Resources/
+│   ├── Models/
+│   └── Policies/
+├── database/
+│   ├── migrations/
+│   └── seeders/
+└── routes/
+    └── api.php
+```
+
+### Frontend
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── layout/
+│   │   ├── employer/
+│   │   ├── seeker/
+│   │   └── admin/
+│   ├── contexts/
+│   ├── pages/
+│   └── services/
+└── package.json
+```
+
+## Key Features Implementation
+
+### Authentication
+- JWT token-based authentication using Laravel Sanctum
+- Token stored in localStorage on frontend
+- Automatic token injection in API requests
+
+### Authorization
+- Policies for resource-based authorization
+- Form Request validation classes
+- Middleware for route protection
+
+### File Upload
+- Resume upload with PDF validation
+- Stored in `storage/app/public/resumes`
+- Accessible via storage symlink
+
+### API Resources
+- Consistent JSON response format
+- Proper data transformation
+- Relationship loading optimization
+
+## Development Notes
+
+- CORS is configured for localhost:5173
+- File uploads limited to 2MB PDFs
+- API follows REST conventions
+- Frontend uses Axios interceptors for auth
+- Clean, minimal UI with Tailwind CSS
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source.
